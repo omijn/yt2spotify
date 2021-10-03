@@ -58,11 +58,21 @@ def yt2spotify():
     spotify_search_query = f"{song_title} {song_artist}"
     results = sp.search(spotify_search_query, limit=5, type="track")
 
-    res_urls = {'results': []}
+    response = {'results': []}
     for item in results['tracks']['items']:
-        res_urls['results'].append(item['external_urls']['spotify'])
+        resp_item = {
+            'url': item['external_urls']['spotify'],
+            'album': {
+                'art': item['album']['images'][0]['url'],
+                'name': item['album']['name'],
+                'release_date': item['album']['release_date'][:4]
+            },
+            'name': item['name'],
+            'artists': [artist['name'] for artist in item['artists']]
+        }
+        response['results'].append(resp_item)
 
-    return jsonify(res_urls)
+    return jsonify(response)
 
 
 def spotify2yt(sp, yt, url):
