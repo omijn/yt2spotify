@@ -16,79 +16,18 @@
     <meta name="theme-color" content="#7952b3">
 
     <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-        }
-
-        @media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-                font-size: 3.5rem;
-            }
-        }
-
-        /*
-        * Globals
-        */
-
-
-        /* Custom default button */
-        .btn-secondary,
-        .btn-secondary:hover,
-        .btn-secondary:focus {
-            color: #333;
-            text-shadow: none;
-            /* Prevent inheritance from `body` */
-        }
-
-
-        /*
-        * Base structure
-        */
-
-        body {
-            text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
-            box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
-        }
-
         .cover-container {
             max-width: 42em;
         }
 
-
-        /*
-        * Header
-        */
-
-        .nav-masthead .nav-link {
-            padding: .25rem 0;
-            font-weight: 700;
-            color: rgba(255, 255, 255, .5);
-            background-color: transparent;
-            border-bottom: .25rem solid transparent;
+        button {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
         }
 
-        .nav-masthead .nav-link:hover,
-        .nav-masthead .nav-link:focus {
-            border-bottom-color: rgba(255, 255, 255, .25);
-        }
-
-        .nav-masthead .nav-link + .nav-link {
-            margin-left: 1rem;
-        }
-
-        .nav-masthead .active {
-            color: #fff;
-            border-bottom-color: #fff;
-        }
     </style>
-
-
-    <!-- Custom styles for this template -->
-    <link href="cover.css" rel="stylesheet">
 </head>
 
 <body class="d-flex h-100 text-center text-white bg-dark">
@@ -161,13 +100,14 @@
         document.body.removeChild(textArea);
     }
 
-    function copyTextToClipboard(text) {
+    function copyTextToClipboard(text, element) {
         if (!navigator.clipboard) {
             fallbackCopyTextToClipboard(text);
+            element.innerHTML = 'Copied!'
             return;
         }
         navigator.clipboard.writeText(text).then(function () {
-            console.log('Async: Copying to clipboard was successful!');
+            element.innerHTML = 'Copied!'
         }, function (err) {
             console.error('Async: Could not copy text: ', err);
         });
@@ -187,7 +127,7 @@
             }
         }).done(function (data, statusText, xhr) {
             for (const res of data.results) {
-                item = `<div class="card mb-3 text-start text-dark" style="max-width: 540px;">
+                item = `<div class="card mb-3 text-start text-dark">
                       <div class="row g-0">
                         <div class="col-md-4 pe-0">
                           <img src="${res.album.art}" class="img-fluid rounded-start" alt="album art">
@@ -195,9 +135,12 @@
                         <div class="col-md-8">
                           <div class="card-body px-3 pb-0">
                             <h5 class="card-title">${res.name}</h5>
-                            <p class="card-text">${res.album.name} <span class=".fst-italic">(${res.album.release_date})</span></p>
+                            <p class="card-text my-0">${res.album.name} <span class=".fst-italic">(${res.album.release_date})</span></p>
                             <p class="card-text text-muted">${res.artists}</p>
-                            <button class="btn btn-link p-0" onclick="copyTextToClipboard('${res.url}')">Copy link</button>
+                            <div class="btn-group p-0 mb-2 mb-md-0" role="group" aria-label="Button group">
+                              <a href="${res.url}" target="_blank" class="btn btn-outline-success">Open in Spotify</a>
+                              <button type="button" class="btn btn-outline-primary" onclick="copyTextToClipboard('${res.url}', this)">Copy link</button>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -209,6 +152,8 @@
             $("#error").text(xhr.responseText).removeClass("d-none")
         })
     })
+
+
 </script>
 </body>
 
