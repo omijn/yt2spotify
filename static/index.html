@@ -11,22 +11,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
 
-
-    <!-- Favicons -->
     <meta name="theme-color" content="#7952b3">
 
     <style>
         .cover-container {
             max-width: 42em;
         }
-
-        button {
-            -webkit-user-select: text;
-            -moz-user-select: text;
-            -ms-user-select: text;
-            user-select: text;
-        }
-
     </style>
 </head>
 
@@ -36,18 +26,7 @@
 
     <main class="px-3">
         <h1>YouTube Music to Spotify</h1>
-        <!-- <form>
-            <div class="form-group">
-                <div class="input-group">
-                    <input type="text" id="url-input" class="form-control" placeholder="YouTube URL"
-                        aria-label="YouTube URL" aria-describedby="convert-btn" autofocus="autofocus">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="submit" id="convert-btn">Button</button>
-                    </div>
-                </div>
-            </div>
-        </form> -->
-
+        <h6>Convert YouTube Music track links to Spotify links</h6>
         <form id="main-form" class="mt-5">
             <div class="input-group">
                 <input type="text" class="form-control" id="url-input" autofocus="autofocus"
@@ -138,7 +117,8 @@
                             <p class="card-text my-0">${res.album.name} <span class=".fst-italic">(${res.album.release_date})</span></p>
                             <p class="card-text text-muted">${res.artists}</p>
                             <div class="btn-group p-0 mb-2 mb-md-0" role="group" aria-label="Button group">
-                              <a href="${res.url}" target="_blank" class="btn btn-outline-success">Open in Spotify</a>
+                              <a href="${res.uri}" target="_blank" class="btn btn-outline-success">Spotify app</a>
+                              <a href="${res.url}" target="_blank" class="btn btn-outline-success">Web</a>
                               <button type="button" class="btn btn-outline-primary" onclick="copyTextToClipboard('${res.url}', this)">Copy link</button>
                             </div>
                           </div>

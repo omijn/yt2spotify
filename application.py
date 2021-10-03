@@ -62,6 +62,7 @@ def yt2spotify():
     for item in results['tracks']['items']:
         resp_item = {
             'url': item['external_urls']['spotify'],
+            'uri': item['uri'],
             'album': {
                 'art': item['album']['images'][0]['url'],
                 'name': item['album']['name'],
