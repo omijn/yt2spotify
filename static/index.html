@@ -105,17 +105,18 @@
                 url: u
             }
         }).done(function (data, statusText, xhr) {
+            $("#results").append(`<p>Couldn't find the right result? Try searching manually: <a target="_blank" href="${data.manual_search_link}">${data.manual_search_link}</a></p>`)
             for (const res of data.results) {
                 item = `<div class="card mb-3 text-start text-dark">
                       <div class="row g-0">
                         <div class="col-md-4 pe-0">
-                          <img src="${res.album.art}" class="img-fluid rounded-start" alt="album art">
+                          <img src="${res.album.art_url}" class="img-fluid rounded-start" alt="album art">
                         </div>
                         <div class="col-md-8">
                           <div class="card-body px-3 pb-0">
                             <h5 class="card-title">${res.name}</h5>
-                            <p class="card-text my-0">${res.album.name} <span class=".fst-italic">(${res.album.release_date})</span></p>
-                            <p class="card-text text-muted">${res.artists}</p>
+                            <p class="card-text my-0">${res.album.name} <span class=".fst-italic">(${res.album.release_year})</span></p>
+                            <p class="card-text text-muted">${res.artists.join(", ")}</p>
                             <div class="btn-group p-0 mb-2 mb-md-0" role="group" aria-label="Button group">
                               <a href="${res.uri}" target="_blank" class="btn btn-outline-success">Spotify app</a>
                               <a href="${res.url}" target="_blank" class="btn btn-outline-success">Web</a>
