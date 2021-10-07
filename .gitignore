@@ -3,3 +3,4 @@ env/
 .vscode/
 config.ini
 __pycache__
+.cache
