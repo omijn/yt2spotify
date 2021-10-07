@@ -1,23 +1,12 @@
-import configparser
 from urllib.parse import unquote
 
 import spotipy
 from flask import Flask, request, Response
 from spotipy.oauth2 import SpotifyClientCredentials
 
-from src.converter import Converter
-from src.services.spotify import SpotifyService
-from src.services.youtube_music import YoutubeMusicService
-
-
-def read_spotify_config(config_path):
-    config = configparser.ConfigParser()
-    config.read(config_path)
-    client_id = config['spotify']['client_id']
-    client_secret = config['spotify']['client_secret']
-
-    return client_id, client_secret
-
+from yt2spotify.converter import Converter
+from yt2spotify.services.spotify import SpotifyService, read_spotify_config
+from yt2spotify.services.youtube_music import YoutubeMusicService
 
 application = Flask(__name__)
 

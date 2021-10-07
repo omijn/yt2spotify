@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from src.models import SearchParams, SearchResult
+from yt2spotify.models import SearchParams, SearchResult
 
 
 class MusicService(ABC):

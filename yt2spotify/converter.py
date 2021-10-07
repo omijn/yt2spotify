@@ -1,4 +1,4 @@
-from src.services.abstract_service import MusicService
+from yt2spotify.services.abstract_service import MusicService
 
 
 class Converter:
