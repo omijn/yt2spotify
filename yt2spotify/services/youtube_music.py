@@ -27,11 +27,12 @@ class YoutubeMusicService(MusicService):
         return SearchParams(name=song_title, artist=song_artist)
 
     def search_with_params(self, params: SearchParams) -> SearchResult:
+        limit = 10
         search_query = f"{params.name} {params.artist}"
-        results = self.yt_client.search(search_query, filter='songs', limit=10)
+        results = self.yt_client.search(search_query, filter='songs', limit=limit)
 
         response = []
-        for item in results:
+        for i, item in enumerate(results):
             resp_item = SearchResultItem(
                 url=f"https://music.youtube.com/watch?v={item['videoId']}",
                 uri='',
@@ -45,6 +46,8 @@ class YoutubeMusicService(MusicService):
             )
 
             response.append(resp_item)
+            if i == (limit - 1):
+                break
 
         manual_search_link = f"https://music.youtube.com/search?q={quote_plus(search_query)}"
         return SearchResult.parse_obj({'results': response, 'manual_search_link': manual_search_link})

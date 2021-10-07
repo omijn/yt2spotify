@@ -1,5 +1,12 @@
 from pydantic import BaseModel, Field
 from typing import List
+from yt2spotify.services.service_names import ServiceNameEnum
+
+
+class ConvertRequest(BaseModel):
+    url: str = Field(..., description="URL to convert")
+    from_service: ServiceNameEnum = Field(..., description="service to convert from")
+    to_service: ServiceNameEnum = Field(..., description="service to convert to")
 
 
 class SearchParams(BaseModel):

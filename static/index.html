@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
-    <title>YouTube Music to Spotify</title>
+    <title>Music link converter</title>
 
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -15,6 +15,10 @@
 
     <style>
         .cover-container {
+            max-width: 100em;
+        }
+
+        .results-container {
             max-width: 42em;
         }
     </style>
@@ -22,22 +26,51 @@
 
 <body class="d-flex h-100 text-center text-white bg-dark">
 
-<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-
+<div class="cover-container p-3 mx-auto h-100 w-100 flex-column d-flex">
     <main class="px-3">
-        <h1>YouTube Music to Spotify</h1>
-        <h6>Convert YouTube Music track links to Spotify links</h6>
-        <form id="main-form" class="mt-5">
-            <div class="input-group">
-                <input type="text" class="form-control" id="url-input" autofocus="autofocus"
-                       placeholder="YouTube URL" autocomplete="off" required="required">
-                <div class="input-group-append">
-                    <button type="submit" id="convert-btn" class="btn btn-success">Convert</button>
+        <h2>Music streaming service link converter</h2>
+        <h6>Convert between YouTube Music and Spotify links</h6>
+        <div class="row mt-5">
+            <div class="col-sm-4 my-3 my-sm-0">
+                <p class="lead">Convert From</p>
+                <div class="btn-group-vertical" role="group" aria-label="Convert from service">
+                    <input type="radio" class="btn-check" name="from-service-radio" value="youtube_music"
+                           id="from-youtube-music"
+                           autocomplete="off" checked>
+                    <label class="btn btn-outline-danger" for="from-youtube-music">YouTube Music</label>
+
+                    <input type="radio" class="btn-check" name="from-service-radio" value="spotify" id="from-spotify"
+                           autocomplete="off">
+                    <label class="btn btn-outline-success" for="from-spotify">Spotify</label>
                 </div>
             </div>
-        </form>
+            <div class="col-sm-4 mt-2 mt-sm-5">
+                <form id="main-form">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="url-input" autofocus="autofocus"
+                               placeholder="Paste link here" autocomplete="off" required="required">
+                        <div class="input-group-append">
+                            <button type="submit" id="convert-btn" class="btn btn-primary">Convert</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-4 my-3 my-sm-0">
+                <p class="lead">Convert To</p>
+                <div class="btn-group-vertical" role="group" aria-label="Convert to service">
+                    <input type="radio" class="btn-check" name="to-service-radio" value="youtube_music"
+                           id="to-youtube-music"
+                           autocomplete="off">
+                    <label class="btn btn-outline-danger" for="to-youtube-music">YouTube Music</label>
 
-        <div id="results" class="container mt-5 d-none"></div>
+                    <input type="radio" class="btn-check" name="to-service-radio" value="spotify" id="to-spotify"
+                           autocomplete="off" checked>
+                    <label class="btn btn-outline-success" for="to-spotify">Spotify</label>
+                </div>
+            </div>
+        </div>
+
+        <div id="results" class="container mt-5 d-none results-container"></div>
         <div id="error" class="alert alert-danger d-none mt-5 lead" role="alert"></div>
     </main>
 
@@ -98,11 +131,19 @@
         $("#results").addClass("d-none")
         $("#results").empty()
         const u = $("#url-input").val()
+        const from_service = $("input[name='from-service-radio']:checked").val()
+        const to_service = $("input[name='to-service-radio']:checked").val()
+        if (from_service === to_service) {
+            $("#error").text("Select different from and to services").removeClass("d-none")
+            return
+        }
         $.ajax({
-            url: '/y2s',
+            url: '/convert',
             method: 'get',
             data: {
-                url: u
+                url: u,
+                from_service: from_service,
+                to_service: to_service
             }
         }).done(function (data, statusText, xhr) {
             $("#results").append(`<p>Couldn't find the right result? Try searching manually: <a target="_blank" href="${data.manual_search_link}">${data.manual_search_link}</a></p>`)
@@ -110,7 +151,7 @@
                 item = `<div class="card mb-3 text-start text-dark">
                       <div class="row g-0">
                         <div class="col-md-4 pe-0">
-                          <img src="${res.album.art_url}" class="img-fluid rounded-start" alt="album art">
+                          <img src="${res.album.art_url}" height="600" width="600" class="img-fluid rounded-start" alt="album art">
                         </div>
                         <div class="col-md-8">
                           <div class="card-body px-3 pb-0">
@@ -118,7 +159,7 @@
                             <p class="card-text my-0">${res.album.name} <span class=".fst-italic">(${res.album.release_year})</span></p>
                             <p class="card-text text-muted">${res.artists.join(", ")}</p>
                             <div class="btn-group p-0 mb-2 mb-md-0" role="group" aria-label="Button group">
-                              <a href="${res.uri}" target="_blank" class="btn btn-outline-success">Spotify app</a>
+                              <a href="${res.uri}" target="_blank" class="btn btn-outline-success">App</a>
                               <a href="${res.url}" target="_blank" class="btn btn-outline-success">Web</a>
                               <button type="button" class="btn btn-outline-primary" onclick="copyTextToClipboard('${res.url}', this)">Copy link</button>
                             </div>
