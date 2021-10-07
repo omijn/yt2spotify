@@ -35,7 +35,7 @@ class YoutubeMusicService(MusicService):
         for i, item in enumerate(results):
             resp_item = SearchResultItem(
                 url=f"https://music.youtube.com/watch?v={item['videoId']}",
-                uri='',
+                uri=f"https://music.youtube.com/watch?v={item['videoId']}",
                 name=item['title'],
                 artists=[artist['name'] for artist in item['artists']],
                 album=AlbumDetails(
