@@ -42,7 +42,7 @@ def index():
     return application.send_static_file('index.html')
 
 
-@application.route('/convert')
+@application.route('/convert', methods=['GET'])
 def convert():
     url = request.args.get('url')
     from_service = request.args.get('from_service')
