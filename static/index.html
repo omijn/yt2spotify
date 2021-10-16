@@ -146,7 +146,7 @@
                 to_service: to_service
             }
         }).done(function (data, statusText, xhr) {
-            $("#results").append(`<p>Couldn't find the right result? Try searching manually: <a target="_blank" href="${data.manual_search_link}">${data.manual_search_link}</a></p>`)
+            $("#results").append(`<p>Couldn't find the right result? Try searching manually: <a target="_blank" href="${data.manual_search_link}">${data.manual_search_link}</a>. You may need to adjust the search terms.</p>`)
             for (const res of data.results) {
                 const release_year = (res.album.release_year === '') ? '' : `(${res.album.release_year})`
                 item = `<div class="card mb-3 text-start text-dark">
