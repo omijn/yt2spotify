@@ -1,4 +1,5 @@
 import configparser
+import os
 import re
 from typing import Optional, Tuple
 
@@ -6,6 +7,20 @@ from spotipy import Spotify
 
 from yt2spotify.models import SearchParams, SearchResult, AlbumDetails, SearchResultItem
 from yt2spotify.services.abstract_service import MusicService
+
+
+def read_spotify_config(config_path: str) -> Tuple[str, str]:
+    config = configparser.ConfigParser()
+    config.read(config_path)
+    client_id = config['spotify']['client_id']
+    client_secret = config['spotify']['client_secret']
+
+    return client_id, client_secret
+
+
+client_id, client_secret = read_spotify_config('config.ini')
+os.environ['SPOTIPY_CLIENT_ID'] = client_id
+os.environ['SPOTIPY_CLIENT_SECRET'] = client_secret
 
 
 class SpotifyService(MusicService):
@@ -47,12 +62,3 @@ class SpotifyService(MusicService):
 
         manual_search_link = f"https://open.spotify.com/search/{spotify_search_query}"
         return SearchResult.parse_obj({'results': response, 'manual_search_link': manual_search_link})
-
-
-def read_spotify_config(config_path: str) -> Tuple[str, str]:
-    config = configparser.ConfigParser()
-    config.read(config_path)
-    client_id = config['spotify']['client_id']
-    client_secret = config['spotify']['client_secret']
-
-    return client_id, client_secret

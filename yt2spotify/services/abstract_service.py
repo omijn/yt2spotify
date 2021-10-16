@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+
 from yt2spotify.models import SearchParams, SearchResult
 
 

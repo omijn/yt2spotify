@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 from typing import List
 from yt2spotify.services.service_names import ServiceNameEnum
 
@@ -7,6 +7,12 @@ class ConvertRequest(BaseModel):
     url: str = Field(..., description="URL to convert")
     from_service: ServiceNameEnum = Field(..., description="service to convert from")
     to_service: ServiceNameEnum = Field(..., description="service to convert to")
+
+    @validator('to_service')
+    def services_are_different(cls, v, values):
+        if 'from_service' in values and v == values['from_service']:
+            raise ValueError('from_service and to_service must be different')
+        return v
 
 
 class SearchParams(BaseModel):
