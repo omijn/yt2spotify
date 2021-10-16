@@ -4,3 +4,4 @@ env/
 config.ini
 __pycache__
 .cache
+deploy.sh
