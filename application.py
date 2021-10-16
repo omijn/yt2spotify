@@ -1,11 +1,17 @@
+import os
 from urllib.parse import unquote
 
 from flask import Flask, request, Response
 
 from yt2spotify import models
 from yt2spotify.converter import Converter
+from yt2spotify.services.spotify import read_spotify_config
 
 application = Flask(__name__)
+
+client_id, client_secret = read_spotify_config('config.ini')
+os.environ['SPOTIPY_CLIENT_ID'] = client_id
+os.environ['SPOTIPY_CLIENT_SECRET'] = client_secret
 
 
 @application.route('/')
@@ -38,4 +44,4 @@ def convert():
 
 
 if __name__ == "__main__":
-    application.run(host='0.0.0.0', port=5000)
+    application.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))

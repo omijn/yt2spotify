@@ -18,11 +18,6 @@ def read_spotify_config(config_path: str) -> Tuple[str, str]:
     return client_id, client_secret
 
 
-client_id, client_secret = read_spotify_config('config.ini')
-os.environ['SPOTIPY_CLIENT_ID'] = client_id
-os.environ['SPOTIPY_CLIENT_SECRET'] = client_secret
-
-
 class SpotifyService(MusicService):
     spotifypattern = re.compile(r'(?:https://)?open\.spotify\.com/track/.*')
 
