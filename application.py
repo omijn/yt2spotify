@@ -9,7 +9,7 @@ from yt2spotify.services.spotify import read_spotify_config
 
 application = Flask(__name__)
 
-client_id, client_secret = read_spotify_config('config.ini')
+client_id, client_secret = read_spotify_config('/app/config.ini')
 os.environ['SPOTIPY_CLIENT_ID'] = client_id
 os.environ['SPOTIPY_CLIENT_SECRET'] = client_secret
 
