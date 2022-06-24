@@ -7,6 +7,7 @@ from spotipy import Spotify
 
 from yt2spotify.models import SearchParams, SearchResult, AlbumDetails, SearchResultItem
 from yt2spotify.services.abstract_service import MusicService
+from yt2spotify.services.service_names import ServiceNameEnum
 
 
 def read_spotify_config(config_path: str) -> Tuple[str, str]:
@@ -20,12 +21,20 @@ def read_spotify_config(config_path: str) -> Tuple[str, str]:
 
 class SpotifyService(MusicService):
     spotifypattern = re.compile(r'(?:https://)?open\.spotify\.com/track/.*')
+    name = ServiceNameEnum.SPOTIFY
 
     def __init__(self, sp_client: Optional[Spotify] = None):
         self.sp_client = sp_client if sp_client is not None else Spotify()
 
+    @classmethod
+    def detect(cls, url: str) -> bool:
+        if not cls.spotifypattern.match(url):
+            return False
+        return True
+
     def url_to_search_params(self, url: str) -> SearchParams:
-        if not self.spotifypattern.match(url):
+
+        if not self.detect(url):
             raise ValueError("Invalid Spotify URL")
 
         track_info = self.sp_client.track(url)

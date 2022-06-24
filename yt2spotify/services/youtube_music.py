@@ -6,12 +6,21 @@ from yt2spotify.services.abstract_service import MusicService
 from yt2spotify.models import SearchParams, SearchResult, SearchResultItem, AlbumDetails
 from ytmusicapi import YTMusic
 
+from yt2spotify.services.service_names import ServiceNameEnum
+
 
 class YoutubeMusicService(MusicService):
     ytpattern = re.compile(r'(?:https://)?music\.youtube\.com/watch\?.*(?<=v=)([-\w]+).*')
+    name = ServiceNameEnum.YOUTUBE_MUSIC
 
     def __init__(self, yt_client: Optional[YTMusic] = None):
         self.yt_client = yt_client if yt_client is not None else YTMusic()
+
+    @classmethod
+    def detect(cls, url: str) -> bool:
+        if not cls.ytpattern.match(url):
+            return False
+        return True
 
     def url_to_search_params(self, url: str) -> SearchParams:
         videos = self.ytpattern.findall(url)

@@ -5,6 +5,8 @@ from flask import Flask, request, Response
 
 from yt2spotify import models
 from yt2spotify.converter import Converter
+from yt2spotify.services.spotify import SpotifyService
+from yt2spotify.services.youtube_music import YoutubeMusicService
 
 application = Flask(__name__)
 
@@ -22,7 +24,16 @@ def index():
 @application.route('/convert', methods=['GET'])
 def convert():
     url = request.args.get('url')
-    from_service = request.args.get('from_service')
+
+    from_service = None
+    for cls in [YoutubeMusicService, SpotifyService]:
+        if cls.detect(url):
+            from_service = cls.name
+            break
+
+    if from_service is None:
+        return Response(response="URL doesn't match any known streaming services", status=400)
+
     to_service = request.args.get('to_service')
     try:
         req = models.ConvertRequest(url=url, from_service=from_service, to_service=to_service)

@@ -28,23 +28,10 @@
 
 <div class="cover-container p-3 mx-auto h-100 w-100 flex-column d-flex">
     <main class="px-3">
-        <h2>Music streaming service link converter</h2>
+        <h2>Music Link Converter</h2>
         <h6>Convert between YouTube Music and Spotify links</h6>
         <div class="row mt-5">
-            <div class="col-sm-4 my-3 my-sm-0">
-                <p class="lead">Convert From</p>
-                <div class="btn-group-vertical" role="group" aria-label="Convert from service">
-                    <input type="radio" class="btn-check" name="from-service-radio" value="youtube_music"
-                           id="from-youtube-music"
-                           autocomplete="off" checked>
-                    <label class="btn btn-outline-light" for="from-youtube-music">YouTube Music</label>
-
-                    <input type="radio" class="btn-check" name="from-service-radio" value="spotify" id="from-spotify"
-                           autocomplete="off">
-                    <label class="btn btn-outline-light" for="from-spotify">Spotify</label>
-                </div>
-            </div>
-            <div class="col-sm-4 mt-2 mt-sm-5">
+            <div class="col-sm-6 mx-auto mt-sm-5">
                 <form id="main-form">
                     <div class="input-group">
                         <input type="text" class="form-control" id="url-input" autofocus="autofocus"
@@ -55,9 +42,11 @@
                     </div>
                 </form>
             </div>
-            <div class="col-sm-4 my-3 my-sm-0">
+        </div>
+        <div class="row mt-5">
+            <div class="col-sm-6 mx-auto my-sm-0">
                 <p class="lead">Convert To</p>
-                <div class="btn-group-vertical" role="group" aria-label="Convert to service">
+                <div class="btn-group" role="group" aria-label="Convert to service">
                     <input type="radio" class="btn-check" name="to-service-radio" value="youtube_music"
                            id="to-youtube-music"
                            autocomplete="off">
@@ -133,16 +122,12 @@
         const u = $("#url-input").val()
         const from_service = $("input[name='from-service-radio']:checked").val()
         const to_service = $("input[name='to-service-radio']:checked").val()
-        if (from_service === to_service) {
-            $("#error").text("Select different from and to services").removeClass("d-none")
-            return
-        }
+
         $.ajax({
             url: '/convert',
             method: 'get',
             data: {
                 url: u,
-                from_service: from_service,
                 to_service: to_service
             }
         }).done(function (data, statusText, xhr) {
