@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, validator
-from typing import List
+from typing import List, Optional, Union
 from yt2spotify.services.service_names import ServiceNameEnum
 
 
@@ -16,9 +16,10 @@ class ConvertRequest(BaseModel):
 
 
 class SearchParams(BaseModel):
-    name: str = Field(...)
-    album: str = Field(default=None)
-    artist: str = Field(...)
+    name: Optional[str]
+    album: Optional[str] = Field(default=None)
+    artist: Optional[str]
+    search_type_hint: Optional[str]
 
 
 class AlbumDetails(BaseModel):
@@ -35,6 +36,14 @@ class SearchResultItem(BaseModel):
     artists: List[str] = Field(...)
 
 
+class ArtistSearchResult(BaseModel):
+    url: str = Field(...)
+    uri: str = Field(...)
+    name: str
+    description: Optional[str]
+    art_url: str = Field(default=None)
+
+
 class SearchResult(BaseModel):
-    results: List[SearchResultItem] = Field(default=[])
+    results: List[Union[SearchResultItem, ArtistSearchResult]] = Field(default=[])
     manual_search_link: str = Field(...)
