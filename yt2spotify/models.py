@@ -22,18 +22,21 @@ class SearchParams(BaseModel):
     search_type_hint: Optional[str]
 
 
-class AlbumDetails(BaseModel):
-    art_url: str = Field(default=None)
-    name: str = Field(...)
-    release_year: str = Field(default=None)
-
-
 class SearchResultItem(BaseModel):
     url: str = Field(...)
     uri: str = Field(...)
-    album: AlbumDetails = Field(...)
-    name: str = Field(...)
-    artists: List[str] = Field(...)
+
+    @validator("art_url")
+    def validate_art_url(cls, art_url: str):
+        if art_url is None or art_url == "":
+            art_url = "/static/images/musical-note.png"
+        return art_url
+
+    art_url: str = Field(default=None)
+    description1: str = Field(...)
+    description2: Optional[str] = Field(default="")
+    description3: Optional[str] = Field(default="")
+    description4: Optional[str] = Field(default="")
 
 
 class ArtistSearchResult(BaseModel):

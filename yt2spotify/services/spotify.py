@@ -1,11 +1,10 @@
 import configparser
-import os
 import re
 from typing import Optional, Tuple
 
 from spotipy import Spotify
 
-from yt2spotify.models import SearchParams, SearchResult, AlbumDetails, SearchResultItem, ArtistSearchResult
+from yt2spotify.models import SearchParams, SearchResult, SearchResultItem
 from yt2spotify.services.abstract_service import MusicService
 from yt2spotify.services.service_names import ServiceNameEnum
 
@@ -62,13 +61,11 @@ class SpotifyService(MusicService):
                 resp_item = SearchResultItem(
                     url=item['external_urls']['spotify'],
                     uri=item['uri'],
-                    name=item['name'],
-                    artists=[artist['name'] for artist in item['artists']],
-                    album=AlbumDetails(
-                        art_url=item['images'][0]['url'],
-                        name=item['name'],
-                        release_year=item['release_date'][:4]
-                    )
+                    description1=item['name'],
+                    description2=item['release_date'][:4],
+                    description3=", ".join([artist['name'] for artist in item['artists']]),
+                    description4="Album",
+                    art_url=item['images'][0]['url'],
                 )
 
                 response.append(resp_item)
@@ -78,10 +75,11 @@ class SpotifyService(MusicService):
             results = self.sp_client.search(search_query, limit=10, type="artist")
             response = []
             for item in results['artists']['items']:
-                resp_item = ArtistSearchResult(
+                resp_item = SearchResultItem(
                     url=item['external_urls']['spotify'],
                     uri=item['uri'],
-                    name=item['name'],
+                    description1=item['name'],
+                    description4="Artist",
                     art_url=item['images'][0]['url'] if len(item['images']) > 0 else ""
                 )
 
@@ -95,13 +93,11 @@ class SpotifyService(MusicService):
                 resp_item = SearchResultItem(
                     url=item['external_urls']['spotify'],
                     uri=item['uri'],
-                    name=item['name'],
-                    artists=[artist['name'] for artist in item['artists']],
-                    album=AlbumDetails(
-                        art_url=item['album']['images'][0]['url'],
-                        name=item['album']['name'],
-                        release_year=item['album']['release_date'][:4]
-                    )
+                    description1=item['name'],
+                    description2=f"{item['album']['name']} ({item['album']['release_date'][:4]})",
+                    description3=", ".join([artist['name'] for artist in item['artists']]),
+                    description4="Track",
+                    art_url=item['album']['images'][0]['url'],
                 )
 
                 response.append(resp_item)

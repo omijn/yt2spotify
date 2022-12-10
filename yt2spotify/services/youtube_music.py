@@ -1,11 +1,11 @@
-from typing import List, Optional
 import re
+from typing import Optional
 from urllib.parse import quote_plus
 
-from yt2spotify.services.abstract_service import MusicService
-from yt2spotify.models import SearchParams, SearchResult, SearchResultItem, AlbumDetails, ArtistSearchResult
 from ytmusicapi import YTMusic
 
+from yt2spotify.models import SearchParams, SearchResult, SearchResultItem
+from yt2spotify.services.abstract_service import MusicService
 from yt2spotify.services.service_names import ServiceNameEnum
 
 
@@ -20,7 +20,8 @@ class YoutubeMusicService(MusicService):
 
     @classmethod
     def detect(cls, url: str) -> bool:
-        if not cls.ytpattern.match(url) and not cls.ytchannel_pattern.match(url) and not cls.ytplaylist_pattern.match(url):
+        if not cls.ytpattern.match(url) and not cls.ytchannel_pattern.match(url) and not cls.ytplaylist_pattern.match(
+                url):
             return False
         return True
 
@@ -62,13 +63,11 @@ class YoutubeMusicService(MusicService):
                 resp_item = SearchResultItem(
                     url=f"https://music.youtube.com/browse/{item['browseId']}",
                     uri=f"https://music.youtube.com/browse/{item['browseId']}",
-                    name=item['title'],
-                    artists=[artist['name'] for artist in item['artists']],
-                    album=AlbumDetails(
-                        art_url=item['thumbnails'][-1]['url'],
-                        name=item['type'],
-                        release_year=item['year'] or ''
-                    )
+                    description1=item['title'],
+                    description2=item['year'] or '',
+                    description3=", ".join([artist['name'] for artist in item['artists']]),
+                    description4="Album",
+                    art_url=item['thumbnails'][-1]['url'],
                 )
 
                 response.append(resp_item)
@@ -79,10 +78,11 @@ class YoutubeMusicService(MusicService):
 
             response = []
             for i, item in enumerate(results[:limit]):
-                resp_item = ArtistSearchResult(
+                resp_item = SearchResultItem(
                     url=f"https://music.youtube.com/browse/{item['browseId']}",
                     uri=f"https://music.youtube.com/browse/{item['browseId']}",
-                    name=item['artist'],
+                    description1=item['artist'],
+                    description4="Artist",
                     art_url=item['thumbnails'][-1]['url'],
                 )
 
@@ -95,17 +95,14 @@ class YoutubeMusicService(MusicService):
                 resp_item = SearchResultItem(
                     url=f"https://music.youtube.com/watch?v={item['videoId']}",
                     uri=f"https://music.youtube.com/watch?v={item['videoId']}",
-                    name=item['title'],
-                    artists=[artist['name'] for artist in item['artists']],
-                    album=AlbumDetails(
-                        art_url=item['thumbnails'][-1]['url'],
-                        name=item['album']['name'],
-                        release_year=item['year'] or ''
-                    )
+                    description1=item['title'],
+                    description2=f"{item['album']['name']} {'(' + item['year'] + ')' if item['year'] else ''}",
+                    description3=", ".join([artist['name'] for artist in item['artists']]),
+                    description4="Track",
+                    art_url=item['thumbnails'][-1]['url'],
                 )
 
                 response.append(resp_item)
 
         manual_search_link = f"https://music.youtube.com/search?q={quote_plus(search_query)}"
         return SearchResult.parse_obj({'results': response, 'manual_search_link': manual_search_link})
-
