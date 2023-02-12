@@ -11,7 +11,7 @@ class ConvertRequest(BaseModel):
     @validator('to_service')
     def services_are_different(cls, v, values):
         if 'from_service' in values and v == values['from_service']:
-            raise ValueError('from_service and to_service must be different')
+            raise ValueError('Select a different service to convert to')
         return v
 
 

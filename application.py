@@ -1,7 +1,9 @@
+import logging
 import os
 from urllib.parse import unquote
 
 from flask import Flask, request, Response
+from pydantic import ValidationError
 
 from yt2spotify import models
 from yt2spotify.converter import Converter
@@ -32,15 +34,14 @@ def convert():
             break
 
     if from_service is None:
-        return Response(response="URL doesn't match any known streaming services", status=400)
+        return Response(response="URL is incomplete or doesn't match any known streaming services", status=400)
 
     to_service = request.args.get('to_service')
     try:
         req = models.ConvertRequest(url=url, from_service=from_service, to_service=to_service)
-    except Exception as e:
+    except ValidationError as e:
         # TODO: be more specific about error
-        return Response(response="You need to provide a link to convert and select a service to convert from and to",
-                        status=400)
+        return Response(response=str(e.json()), status=400)
 
     url = unquote(req.url)
     converter = Converter.by_names(from_service_name=req.from_service, to_service_name=req.to_service)
@@ -49,9 +50,11 @@ def convert():
         result = converter.convert(url)
         return Response(response=result.json(), status=200, mimetype='application/json')
     except ValueError as e:
+        logging.exception(f"conversion error for URL '{url}'")
         return Response(response=str(e), status=400)
     except Exception as e:
-        return Response(response="That didn't work.", status=500)
+        logging.exception(f"conversion error for URL '{url}'")
+        return Response(response="Something went wrong.", status=500)
 
 
 if __name__ == "__main__":

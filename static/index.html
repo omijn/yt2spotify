@@ -33,12 +33,14 @@
         <div class="row mt-5">
             <div class="col-sm-6 mx-auto mt-sm-5">
                 <form id="main-form">
+                    <label for="url-input">Enter YT Music or Spotify track/artist/album link</label>
                     <div class="input-group">
                         <input type="text" class="form-control" id="url-input" autofocus="autofocus"
-                               placeholder="Paste YT Music or Spotify track/artist/album link here" autocomplete="off"
+                               placeholder="https://music.youtube.com/watch?v=lYBUbBu4W08&feature=share" autocomplete="off"
                                required="required">
                         <div class="input-group-append">
-                            <button type="submit" id="convert-btn" class="btn btn-primary">Convert</button>
+                            <button type="submit" id="convert-btn" class="btn btn-success">Convert</button>
+                            <button type="button" id="clear-btn" class="btn btn-primary">Clear</button>
                         </div>
                     </div>
                 </form>
@@ -51,11 +53,13 @@
                     <input type="radio" class="btn-check" name="to-service-radio" value="youtube_music"
                            id="to-youtube-music"
                            autocomplete="off">
-                    <label class="btn btn-outline-light" for="to-youtube-music">YouTube Music</label>
+                    <label class="btn btn-outline-light border-1 border-end-0 border-danger" for="to-youtube-music">YouTube
+                        Music</label>
 
                     <input type="radio" class="btn-check" name="to-service-radio" value="spotify" id="to-spotify"
-                           autocomplete="off" checked>
-                    <label class="btn btn-outline-light" for="to-spotify">Spotify</label>
+                           autocomplete="off">
+                    <label class="btn btn-outline-light border-1 border-start-0 border-success"
+                           for="to-spotify">Spotify</label>
                 </div>
             </div>
         </div>
@@ -66,7 +70,8 @@
 
     <footer class="mt-auto text-white-50">
         <p><a class="text-white" href="https://github.com/omijn/yt2spotify">GitHub Repo</a></p>
-        <p><a class="small text-white" href="https://www.flaticon.com/free-icons/music" title="music icons">Default music icon created by Freepik - Flaticon</a></p>
+        <p><a class="small text-white" href="https://www.flaticon.com/free-icons/music" title="music icons">Default
+            music icon created by Freepik - Flaticon</a></p>
     </footer>
 </div>
 
@@ -116,13 +121,33 @@
         });
     }
 
+    $("#clear-btn").click(function (e) {
+        $("#url-input").val("").focus()
+    })
+
+    function detectToService(inputText) {
+        if (/(?:https:\/\/)?music\.youtube\.com/.test(inputText)) {
+            $(".btn-check[value=spotify]").prop("checked", true)
+        } else if (/(?:https:\/\/)?open\.spotify\.com\//.test(inputText)) {
+            $(".btn-check[value=youtube_music]").prop("checked", true)
+        } else {
+            $(".btn-check").prop("checked", false)
+        }
+    }
+
+    $("#url-input").on("change keyup paste", function (e) {
+        const inputText = $(this).val()
+        detectToService(inputText)
+    })
+
     $("#main-form").submit(function (e) {
+        const inputText = $("#url-input").val()
+        detectToService(inputText)
         e.preventDefault();
         $("#error").addClass("d-none")
         $("#results").addClass("d-none")
         $("#results").empty()
         const u = $("#url-input").val()
-        const from_service = $("input[name='from-service-radio']:checked").val()
         const to_service = $("input[name='to-service-radio']:checked").val()
 
         $.ajax({

@@ -1,6 +1,7 @@
 import configparser
 import re
 from typing import Optional, Tuple
+from urllib.parse import urljoin, urlparse
 
 from spotipy import Spotify
 
@@ -19,7 +20,7 @@ def read_spotify_config(config_path: str) -> Tuple[str, str]:
 
 
 class SpotifyService(MusicService):
-    spotifypattern = re.compile(r'(?:https://)?open\.spotify\.com/(track|artist|album)/.*')
+    spotifypattern = re.compile(r'(?:https://)?open\.spotify\.com/(track|artist|album)/.+')
     name = ServiceNameEnum.SPOTIFY
 
     def __init__(self, sp_client: Optional[Spotify] = None):
@@ -34,6 +35,8 @@ class SpotifyService(MusicService):
     def url_to_search_params(self, url: str) -> SearchParams:
         if not self.detect(url):
             raise ValueError("Invalid Spotify URL")
+
+        url = urljoin(url, urlparse(url).path)
 
         url_type = self.spotifypattern.findall(url)[0]
         if url_type == "track":
