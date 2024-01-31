@@ -1,28 +1,40 @@
-import spotipy
-from spotipy import SpotifyClientCredentials
+import os
+
+import pytest
 
 from yt2spotify.converter import Converter
-from yt2spotify.services.spotify import SpotifyService, read_spotify_config
-from yt2spotify.services.youtube_music import YoutubeMusicService
+from yt2spotify.services.factory import MusicServiceFactory
+from yt2spotify.services.service_names import ServiceNameEnum
 
 
-def test_convert_yt_to_spotify():
-    yt = YoutubeMusicService()
-    client_id, client_secret = read_spotify_config('../../config.ini')
-    sp_client = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=client_id, client_secret=client_secret))
-    sp = SpotifyService(sp_client)
+@pytest.mark.parametrize("test_url",
+    [
+        "https://music.youtube.com/watch?v=dGeEuyG_DIc&feature=share", # song
+        "https://music.youtube.com/playlist?list=OLAK5uy_nbZjqOa38wTK9K4tvhOgPfyKdRnXnYT_4&si=ovpniEj_3ETQJTD6", # album
+        "https://music.youtube.com/channel/UC2XdaAVUannpujzv32jcouQ", # artist
+    ])
+def test_convert_ytm_to_spotify(test_url):
+    assert os.getenv("SPOTIPY_CLIENT_ID") is not None
+    assert os.getenv("SPOTIPY_CLIENT_SECRET") is not None
+    yt = MusicServiceFactory.create(ServiceNameEnum.YOUTUBE_MUSIC)
+    sp = MusicServiceFactory.create(ServiceNameEnum.SPOTIFY)
 
     converter = Converter(yt, sp)
 
-    results = converter.convert("https://music.youtube.com/watch?v=dGeEuyG_DIc&feature=share")
+    results = converter.convert(test_url)
     assert len(results.results) > 0
 
-
-def test_convert_spotify_to_y2():
-    yt = YoutubeMusicService()
-    client_id, client_secret = read_spotify_config('../../config.ini')
-    sp_client = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=client_id, client_secret=client_secret))
-    sp = SpotifyService(sp_client)
+@pytest.mark.parametrize("test_url",
+    [
+        "https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT", # song
+        "https://open.spotify.com/album/2FeyIYDDAQqcOJKOKhvHdr", # album
+        "https://open.spotify.com/artist/66CXWjxzNUsdJxJ2JdwvnR", # artist
+    ])
+def test_convert_spotify_to_ytm(test_url):
+    assert os.getenv("SPOTIPY_CLIENT_ID") is not None
+    assert os.getenv("SPOTIPY_CLIENT_SECRET") is not None
+    yt = MusicServiceFactory.create(ServiceNameEnum.YOUTUBE_MUSIC)
+    sp = MusicServiceFactory.create(ServiceNameEnum.SPOTIFY)
 
     converter = Converter(sp, yt)
 
