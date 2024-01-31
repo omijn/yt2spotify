@@ -16,10 +16,10 @@ class ConvertRequest(BaseModel):
 
 
 class SearchParams(BaseModel):
-    name: Optional[str]
+    name: Optional[str] = Field(default=None)
     album: Optional[str] = Field(default=None)
-    artist: Optional[str]
-    search_type_hint: Optional[str]
+    artist: Optional[str] = Field(default=None)
+    search_type_hint: Optional[str] = Field(default=None)
 
 
 class SearchResultItem(BaseModel):
