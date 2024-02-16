@@ -62,7 +62,7 @@ class SpotifyService(MusicService):
             response = []
             for item in results['albums']['items']:
                 resp_item = SearchResultItem(
-                    url=item['external_urls']['spotify'],
+                    url=item['external_urls']['spotify'] if 'external_urls' in item else "",
                     uri=item['uri'],
                     description1=item['name'],
                     description2=item['release_date'][:4],
