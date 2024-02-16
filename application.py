@@ -7,6 +7,7 @@ from pydantic import ValidationError
 
 from yt2spotify import models
 from yt2spotify.converter import Converter
+from yt2spotify.errors import NotFoundError
 from yt2spotify.services.spotify import SpotifyService
 from yt2spotify.services.youtube_music import YoutubeMusicService
 
@@ -49,6 +50,9 @@ def convert():
     try:
         result = converter.convert(url)
         return Response(response=result.json(), status=200, mimetype='application/json')
+    except NotFoundError as e:
+        logging.exception(f"'not found' error for URL '{url}'")
+        return Response(response=str(e), status=404)
     except ValueError as e:
         logging.exception(f"conversion error for URL '{url}'")
         return Response(response=str(e), status=400)

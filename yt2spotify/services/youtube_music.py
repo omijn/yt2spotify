@@ -4,9 +4,10 @@ from urllib.parse import quote_plus
 
 from ytmusicapi import YTMusic
 
+from yt2spotify.errors import NotFoundError
 from yt2spotify.models import SearchParams, SearchResult, SearchResultItem
 from yt2spotify.services.abstract_service import MusicService
-from yt2spotify.services.service_names import ServiceNameEnum
+from yt2spotify.services.service_names import ServiceNameEnum, FormattedServiceNameEnum
 
 
 class YoutubeMusicService(MusicService):
@@ -32,7 +33,12 @@ class YoutubeMusicService(MusicService):
         video = self.ytpattern.findall(url)
         if len(video) > 0:
             video_id = video[0]
-            song = self.yt_client.get_song(videoId=video_id)
+            try:
+                song = self.yt_client.get_song(videoId=video_id)
+            except Exception as e:
+                if "not found" in str(e).lower() or "404" in str(e):
+                    raise NotFoundError("song", FormattedServiceNameEnum.YOUTUBE_MUSIC)
+                raise e
             song_title = song['videoDetails']['title']
             song_artist = song['videoDetails']['author'].removesuffix(" - Topic")
             return SearchParams(name=song_title, artist=song_artist, search_type_hint="song")
@@ -40,7 +46,12 @@ class YoutubeMusicService(MusicService):
         channel = self.ytchannel_pattern.findall(url)
         if len(channel) > 0:
             channel_id = channel[0]
-            artist = self.yt_client.get_artist(channelId=channel_id)
+            try:
+                artist = self.yt_client.get_artist(channelId=channel_id)
+            except Exception as e:
+                if "not found" in str(e).lower() or "404" in str(e):
+                    raise NotFoundError("artist", FormattedServiceNameEnum.YOUTUBE_MUSIC)
+                raise e
             artist_name = artist['name']
             return SearchParams(artist=artist_name, search_type_hint="artist")
 
@@ -48,7 +59,12 @@ class YoutubeMusicService(MusicService):
         if len(playlist) > 0:
             playlist_id = playlist[0]
             album_browse_id = self.yt_client.get_album_browse_id(audioPlaylistId=playlist_id)
-            album = self.yt_client.get_album(browseId=album_browse_id)
+            try:
+                album = self.yt_client.get_album(browseId=album_browse_id)
+            except Exception as e:
+                if "not found" in str(e).lower() or "404" in str(e):
+                    raise NotFoundError("album", FormattedServiceNameEnum.YOUTUBE_MUSIC)
+                raise e
             album_name = album['title']
             album_artist = album['artists'][0]['name']
             return SearchParams(artist=album_artist, album=album_name, search_type_hint="album")
