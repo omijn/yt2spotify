@@ -96,7 +96,7 @@ class YoutubeMusicService(MusicService):
                     url=f"https://music.youtube.com/watch?v={item['videoId']}",
                     uri=f"https://music.youtube.com/watch?v={item['videoId']}",
                     description1=item['title'],
-                    description2=f"{item['album']['name']} {'(' + item['year'] + ')' if item['year'] else ''}",
+                    description2=f"{item['album']['name'] if item['album'] else 'Unknown album'} {'(' + item['year'] + ')' if item['year'] else ''}",
                     description3=", ".join([artist['name'] for artist in item['artists']]),
                     description4="Track",
                     art_url=item['thumbnails'][-1]['url'],
