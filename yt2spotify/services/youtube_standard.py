@@ -10,9 +10,10 @@ from yt2spotify.services.service_names import ServiceNameEnum
 
 
 class YoutubeService(MusicService):
-    ytpattern = re.compile(r'(?:https://)?www\.youtube\.com/watch\?.*(?<=v=)([-\w]+).*')
-    ytchannel_pattern = re.compile(r'(?:https://)?www\.youtube\.com/(?:(@[-\w]+)|channel/([-\w]+).*)')
-    ytplaylist_pattern = re.compile(r'(?:https://)?www\.youtube\.com/playlist\?.*(?<=list=)([-\w]+).*')
+    ytpattern = re.compile(r'(?:https://)?(?:www\.)?youtube\.com/watch\?.*(?<=v=)([-\w]+).*')
+    ytpattern_short_link = re.compile(r'(?:https://)?youtu\.be/([-_\w]+).*')
+    ytchannel_pattern = re.compile(r'(?:https://)?(?:www\.)?youtube\.com/(?:(@[-\w]+)|channel/([-\w]+).*)')
+    ytplaylist_pattern = re.compile(r'(?:https://)?(?:www\.)?youtube\.com/playlist\?.*(?<=list=)([-\w]+).*')
     name = ServiceNameEnum.YOUTUBE_STANDARD
 
     def __init__(self, yt_client = None):
@@ -24,12 +25,18 @@ class YoutubeService(MusicService):
 
     @classmethod
     def detect(cls, url: str) -> bool:
-        if not cls.ytpattern.match(url) and not cls.ytchannel_pattern.match(url) and not cls.ytplaylist_pattern.match(
-                url):
+        if (
+                not cls.ytpattern.match(url)
+                and not cls.ytchannel_pattern.match(url)
+                and not cls.ytplaylist_pattern.match(url)
+                and not cls.ytpattern_short_link.match(url)
+        ):
             return False
         return True
 
     def url_to_search_params(self, url: str) -> SearchParams:
+        if self.ytpattern_short_link.match(url):
+            url = url.replace("youtu.be/", "youtube.com/watch?v=")
         video = self.ytpattern.findall(url)
         if len(video) > 0:
             video_id = video[0]

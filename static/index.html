@@ -166,6 +166,8 @@
             detectedText = "Spotify"
         } else if (/(?:https:\/\/)?(?:www\.)?youtube\.com/.test(inputText)) {
             detectedText = "YouTube"
+        } else if (/(?:https:\/\/)?youtu\.be/.test(inputText)) {
+            detectedText = "YouTube"
         } else {
             detectedText = "Unknown"
         }
@@ -190,11 +192,11 @@
         const u = $("#url-input").val()
         const to_service = $("input[name='to-service-radio']:checked").val()
         if (to_service === undefined) {
-            $("#error").text("Please select a service to convert to").removeClass("d-none")
+            $("#error").text("Select a service to convert to").removeClass("d-none")
             return
         }
         if (u === "") {
-            $("#error").text("Please enter a URL").removeClass("d-none")
+            $("#error").text("Enter a URL").removeClass("d-none")
             return
         }
 

@@ -13,9 +13,10 @@ class YoutubeYTMService(MusicService):
     to avoid using up the standard client's quota. Uses the YT client to convert the
     url to search params.
     """
-    ytpattern = re.compile(r'(?:https://)?www\.youtube\.com/watch\?.*(?<=v=)([-\w]+).*')
-    ytchannel_pattern = re.compile(r'(?:https://)?www\.youtube\.com/(?:(@[-\w]+)|channel/([-\w]+).*)')
-    ytplaylist_pattern = re.compile(r'(?:https://)?www\.youtube\.com/playlist\?.*(?<=list=)([-\w]+).*')
+    ytpattern = re.compile(r'(?:https://)?(?:www\.)?youtube\.com/watch\?.*(?<=v=)([-\w]+).*')
+    ytpattern_short_link = re.compile(r'(?:https://)?youtu\.be/([-_\w]+).*')
+    ytchannel_pattern = re.compile(r'(?:https://)?(?:www\.)?youtube\.com/(?:(@[-\w]+)|channel/([-\w]+).*)')
+    ytplaylist_pattern = re.compile(r'(?:https://)?(?:www\.)?youtube\.com/playlist\?.*(?<=list=)([-\w]+).*')
     name = ServiceNameEnum.YOUTUBE_YTM
 
     def __init__(self, ytm_service: YoutubeMusicService, yt_service: YoutubeService):
@@ -24,8 +25,12 @@ class YoutubeYTMService(MusicService):
 
     @classmethod
     def detect(cls, url: str) -> bool:
-        if not cls.ytpattern.match(url) and not cls.ytchannel_pattern.match(url) and not cls.ytplaylist_pattern.match(
-                url):
+        if (
+                not cls.ytpattern.match(url)
+                and not cls.ytchannel_pattern.match(url)
+                and not cls.ytplaylist_pattern.match(url)
+                and not cls.ytpattern_short_link.match(url)
+        ):
             return False
         return True
 
