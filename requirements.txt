@@ -9,6 +9,7 @@ charset-normalizer==3.3.2
 click==8.1.7
 dill==0.3.8
 Flask==3.0.1
+google-api-python-client==2.116.0
 gunicorn==21.2.0
 idna==3.6
 iniconfig==2.0.0

@@ -1,5 +1,8 @@
-from pydantic import BaseModel, Field, validator
+from pydantic import field_validator, BaseModel, Field, validator
 from typing import List, Optional, Union
+
+from pydantic_core.core_schema import FieldValidationInfo
+
 from yt2spotify.services.service_names import ServiceNameEnum
 
 
@@ -8,9 +11,9 @@ class ConvertRequest(BaseModel):
     from_service: ServiceNameEnum = Field(..., description="service to convert from")
     to_service: ServiceNameEnum = Field(..., description="service to convert to")
 
-    @validator('to_service')
-    def services_are_different(cls, v, values):
-        if 'from_service' in values and v == values['from_service']:
+    @field_validator('to_service')
+    def services_are_different(cls, v, info: FieldValidationInfo):
+        if 'from_service' in info.data and v == info.data['from_service']:
             raise ValueError('Select a different service to convert to')
         return v
 
@@ -26,7 +29,7 @@ class SearchResultItem(BaseModel):
     url: str = Field(...)
     uri: str = Field(...)
 
-    @validator("art_url")
+    @field_validator("art_url")
     def validate_art_url(cls, art_url: str):
         if art_url is None or art_url == "":
             art_url = "/static/images/musical-note.png"
@@ -43,7 +46,7 @@ class ArtistSearchResult(BaseModel):
     url: str = Field(...)
     uri: str = Field(...)
     name: str
-    description: Optional[str]
+    description: Optional[str] = None
     art_url: str = Field(default=None)
 
 
