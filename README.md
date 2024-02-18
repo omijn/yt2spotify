@@ -1,3 +1,5 @@
 ## yt2spotify
 
-Convert between YouTube Music and Spotify links.
+https://ytm2spotify.com
+
+Convert across YouTube Music, YouTube and Spotify links.
