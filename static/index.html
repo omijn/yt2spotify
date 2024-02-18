@@ -24,6 +24,10 @@
 
     <meta name="theme-color" content="#7952b3">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&family=Play&display=swap" rel="stylesheet">
+
     <style>
         .cover-container {
             max-width: 100em;
@@ -32,6 +36,19 @@
         .results-container {
             max-width: 42em;
         }
+
+        .primaryfont {
+            font-family: "Cutive Mono", monospace;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        body {
+            font-family: Consolas, monaco, monospace;
+            font-weight: 400;
+            font-style: normal;
+        }
+
     </style>
 </head>
 
@@ -39,13 +56,13 @@
 
 <div class="cover-container p-3 mx-auto h-100 w-100 flex-column d-flex">
     <main class="px-3">
-        <h2>Music Link Converter</h2>
-        <h6>Convert between YouTube Music and Spotify links</h6>
+        <h2 class="primaryfont">music link converter</h2>
+        <h6>Convert links across YouTube Music, YouTube and Spotify</h6>
         <div class="row mt-5">
             <div class="col-sm-6 mx-auto mt-sm-5">
                 <form id="main-form">
-                    <label for="url-input">Enter YT Music or Spotify track/artist/album link</label>
-                    <div class="input-group">
+                    <label for="url-input">Enter track/artist/album link</label>
+                    <div class="mt-2 input-group">
                         <input type="text" class="form-control" id="url-input" autofocus="autofocus"
                                placeholder="https://music.youtube.com/watch?v=lYBUbBu4W08&feature=share" autocomplete="off"
                                required="required">
@@ -54,6 +71,7 @@
                             <button type="button" id="clear-btn" class="btn btn-primary">Clear</button>
                         </div>
                     </div>
+                    <div class="mt-2"><p id="detected-from-service"></p></div>
                 </form>
             </div>
         </div>
@@ -67,9 +85,15 @@
                     <label class="btn btn-outline-light border-1 border-end-0 border-danger" for="to-youtube-music">YouTube
                         Music</label>
 
+                    <input type="radio" class="btn-check" name="to-service-radio" value="youtube_ytm"
+                           id="to-youtube"
+                           autocomplete="off">
+                    <label class="btn btn-outline-light border-1 border-danger" for="to-youtube">YouTube
+                        </label>
+
                     <input type="radio" class="btn-check" name="to-service-radio" value="spotify" id="to-spotify"
                            autocomplete="off">
-                    <label class="btn btn-outline-light border-1 border-start-0 border-success"
+                    <label class="btn btn-outline-light border-1 border-success"
                            for="to-spotify">Spotify</label>
                 </div>
             </div>
@@ -134,30 +158,45 @@
         $("#url-input").val("").focus()
     })
 
-    function detectToService(inputText) {
+    function detectFromService(inputText) {
+        let detectedText = ""
         if (/(?:https:\/\/)?music\.youtube\.com/.test(inputText)) {
-            $(".btn-check[value=spotify]").prop("checked", true)
+            detectedText = "YouTube Music"
         } else if (/(?:https:\/\/)?open\.spotify\.com\//.test(inputText)) {
-            $(".btn-check[value=youtube_music]").prop("checked", true)
+            detectedText = "Spotify"
+        } else if (/(?:https:\/\/)?(?:www\.)?youtube\.com/.test(inputText)) {
+            detectedText = "YouTube"
         } else {
-            $(".btn-check").prop("checked", false)
+            detectedText = "Unknown"
         }
+        return detectedText
     }
 
     $("#url-input").on("change keyup paste", function (e) {
         const inputText = $(this).val()
-        detectToService(inputText)
+        if (inputText === "") {
+            $("#detected-from-service").text("")
+            return
+        }
+        const detectedText = detectFromService(inputText)
+        $("#detected-from-service").text(`Detected ${detectedText}`)
     })
 
     $("#main-form").submit(function (e) {
-        const inputText = $("#url-input").val()
-        detectToService(inputText)
         e.preventDefault();
         $("#error").addClass("d-none")
         $("#results").addClass("d-none")
         $("#results").empty()
         const u = $("#url-input").val()
         const to_service = $("input[name='to-service-radio']:checked").val()
+        if (to_service === undefined) {
+            $("#error").text("Please select a service to convert to").removeClass("d-none")
+            return
+        }
+        if (u === "") {
+            $("#error").text("Please enter a URL").removeClass("d-none")
+            return
+        }
 
         $.ajax({
             url: '/convert',
