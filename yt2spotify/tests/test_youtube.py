@@ -15,7 +15,8 @@ from yt2spotify.services.service_names import ServiceNameEnum
         ("https://www.youtube.com/watch?v=ffxKSjUwKdU", "song"),    # video title contains (Official Video), channel name has Vevo
         ("https://www.youtube.com/watch?v=hT_nvWreIhg", "song"),    # normal video title but channel name has VEVO
         ("https://www.youtube.com/playlist?list=OLAK5uy_mbiRc-WQKXNRCfAeZBsoA-hILP3Oeu2WU", "album"),    # Coldplay - Everyday Life album (official), but channel name according to API is YouTube instead of Coldplay
-        ("https://www.youtube.com/playlist?list=PLFAcddgaFN8zqIJrTakvM9qWnR7iIrXnj", "album")   # Michael Jackson - Thriller album by MusicVevo channel
+        ("https://www.youtube.com/playlist?list=PLFAcddgaFN8zqIJrTakvM9qWnR7iIrXnj", "album"),   # Michael Jackson - Thriller album by MusicVevo channel
+        ("https://youtu.be/5waF8YR3GmQ", "song")    # short link
     ]
 )
 def test_url_parsing(test_url, expected_search_hint):
