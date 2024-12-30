@@ -25,6 +25,9 @@ class YoutubeYTMService(MusicService):
 
     @classmethod
     def detect(cls, url: str) -> bool:
+        # convert mobile youtube links to standard Youtube links
+        url = url.replace("m.youtube.com", "youtube.com")
+
         if (
                 not cls.ytpattern.match(url)
                 and not cls.ytchannel_pattern.match(url)
@@ -37,6 +40,9 @@ class YoutubeYTMService(MusicService):
     def url_to_search_params(self, url: str) -> SearchParams:
         # url = url.replace("youtube.com", "music.youtube.com").replace("www.", "")
         # return self.ytm_service.url_to_search_params(url)
+        
+        # convert mobile youtube links to standard Youtube links
+        url = url.replace("m.youtube.com", "youtube.com")
         return self.yt_service.url_to_search_params(url)
 
     def search_with_params(self, params: SearchParams) -> SearchResult:
