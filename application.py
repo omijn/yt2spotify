@@ -20,11 +20,6 @@ for var in required_vars:
         raise Exception(f"'{var}' env var is required")
 
 
-@application.route('/')
-def index():
-    return application.send_static_file('index.html')
-
-
 @application.route('/convert', methods=['GET'])
 def convert():
     url = request.args.get('url')
