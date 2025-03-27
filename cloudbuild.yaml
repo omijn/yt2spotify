@@ -27,4 +27,5 @@ availableSecrets:
       env: SPOTIPY_CLIENT_SECRET
     - versionName: projects/219018181544/secrets/YOUTUBE_API_KEY/versions/latest
       env: YOUTUBE_API_KEY
-
+options:
+  logging: CLOUD_LOGGING_ONLY
