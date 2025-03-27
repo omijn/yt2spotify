@@ -21,11 +21,11 @@ tags:
   - yt2spotify
 availableSecrets:
   secretManager:
-    - versionName: projects/219018181544/secrets/SPOTIPY_CLIENT_ID/versions/latest
+    - versionName: projects/219018181544/secrets/SPOTIPY_CLIENT_ID/versions/1
       env: SPOTIPY_CLIENT_ID
-    - versionName: projects/219018181544/secrets/SPOTIPY_CLIENT_SECRET/versions/latest
+    - versionName: projects/219018181544/secrets/SPOTIPY_CLIENT_SECRET/versions/1
       env: SPOTIPY_CLIENT_SECRET
-    - versionName: projects/219018181544/secrets/YOUTUBE_API_KEY/versions/latest
+    - versionName: projects/219018181544/secrets/YOUTUBE_API_KEY/versions/1
       env: YOUTUBE_API_KEY
 options:
   logging: CLOUD_LOGGING_ONLY
