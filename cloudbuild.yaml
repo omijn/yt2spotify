@@ -1,0 +1,31 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: ['build', '-t', '$_AR_HOSTNAME/$PROJECT_ID/$_REPOSITORY/$_SERVICE_NAME:$COMMIT_SHA', '.']
+    id: Build docker image
+  - name: gcr.io/cloud-builders/docker
+    args: ['push', '$_AR_HOSTNAME/$PROJECT_ID/$_REPOSITORY/$_SERVICE_NAME:$COMMIT_SHA']
+    id: Push docker image
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    args: ['run', 'deploy', '$_SERVICE_NAME', '--image=$_AR_HOSTNAME/$PROJECT_ID/$_REPOSITORY/$_SERVICE_NAME:$COMMIT_SHA', '--labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID', '--region=$_DEPLOY_REGION']
+    id: Deploy to Cloud Run
+    entrypoint: gcloud
+    secretEnv:
+      - SPOTIPY_CLIENT_ID
+      - SPOTIPY_CLIENT_SECRET
+      - YOUTUBE_API_KEY
+images:
+  - '$_AR_HOSTNAME/$PROJECT_ID/$_REPOSITORY/$_SERVICE_NAME:$COMMIT_SHA'
+tags:
+  - gcp-cloud-build-deploy-cloud-run
+  - gcp-cloud-build-deploy-cloud-run-managed
+  - yt2spotify
+availableSecrets:
+  secretManager:
+    - versionName: projects/219018181544/secrets/SPOTIPY_CLIENT_ID/versions/latest
+      env: SPOTIPY_CLIENT_ID
+    - versionName: projects/219018181544/secrets/SPOTIPY_CLIENT_SECRET/versions/latest
+      env: SPOTIPY_CLIENT_SECRET
+    - versionName: projects/219018181544/secrets/YOUTUBE_API_KEY/versions/latest
+      env: YOUTUBE_API_KEY
+options:
+  logging: CLOUD_LOGGING_ONLY
