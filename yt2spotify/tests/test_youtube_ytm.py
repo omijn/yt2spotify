@@ -19,7 +19,8 @@ from yt2spotify.services.service_names import ServiceNameEnum
         ("https://youtu.be/5waF8YR3GmQ", "song"),    # short link
         ("https://m.youtube.com/watch?v=dQw4w9WgXcQ", "song"),    # Basic mobile video
         ("https://m.youtube.com/@coldplay", "artist"),            # Mobile artist page
-        ("https://m.youtube.com/playlist?list=PLFAcddgaFN8zqIJrTakvM9qWnR7iIrXnj", "album")  # Mobile playlist
+        ("https://m.youtube.com/playlist?list=PLFAcddgaFN8zqIJrTakvM9qWnR7iIrXnj", "album"),  # Mobile playlist
+        ("https://www.youtube.com/watch?v=j240StM6JAg", "song")
     ]
 )
 def test_url_parsing(test_url, expected_search_hint):
