@@ -5,6 +5,7 @@ from urllib.parse import quote_plus
 from ytmusicapi import YTMusic
 
 from yt2spotify.errors import NotFoundError
+from yt2spotify.logging import get_gcp_logger
 from yt2spotify.models import SearchParams, SearchResult, SearchResultItem
 from yt2spotify.services.abstract_service import MusicService
 from yt2spotify.services.service_names import ServiceNameEnum, FormattedServiceNameEnum
@@ -18,6 +19,7 @@ class YoutubeMusicService(MusicService):
 
     def __init__(self, ytm_client: Optional[YTMusic] = None):
         self.ytm_client = ytm_client if ytm_client is not None else YTMusic()
+        self.logger = get_gcp_logger(__name__)
 
     @classmethod
     def detect(cls, url: str) -> bool:
@@ -35,6 +37,11 @@ class YoutubeMusicService(MusicService):
             except Exception as e:
                 if "not found" in str(e).lower() or "404" in str(e):
                     raise NotFoundError("song", FormattedServiceNameEnum.YOUTUBE_MUSIC)
+                raise e
+            try:
+                song['videoDetails']
+            except Exception as e:
+                self.logger.info(f"song: {song}")
                 raise e
             song_title = song['videoDetails']['title']
             song_artist = song['videoDetails']['author'].removesuffix(" - Topic")
