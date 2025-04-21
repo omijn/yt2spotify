@@ -9,7 +9,8 @@ from yt2spotify.services.service_names import ServiceNameEnum
         ("https://music.youtube.com/watch?v=agPV1ZvtLHI&si=klsijOktQeoa4avd", "song"),
         ("https://music.youtube.com/playlist?list=OLAK5uy_l1U925dsiDi2DqlG-KCbODG6BaibpxbQE&si=4BaMhBCiremnvdil", "album"),
         ("https://music.youtube.com/channel/UCoIOOL7QKuBhQHVKL8y7BEQ?si=osCb8S8l7ZmRUPlU", "artist"),
-        ("https://music.youtube.com/watch?v=j240StM6JAg", "song")
+        ("https://music.youtube.com/watch?v=j240StM6JAg", "song"),
+        ("https://music.youtube.com/watch?v=ey5W6q-J4bs&si=E4GUcRDYzb9yEK8v", "song")
     ]
 )
 def test_url_parsing(test_url, expected_search_hint):
