@@ -34,7 +34,7 @@ availableSecrets:
       env: YOUTUBE_MUSIC_CLIENT_ID
     - versionName: projects/219018181544/secrets/YOUTUBE_MUSIC_CLIENT_SECRET/versions/1
       env: YOUTUBE_MUSIC_CLIENT_SECRET
-    - versionName: projects/219018181544/secrets/YOUTUBE_MUSIC_OAUTH_JSON/versions/1
+    - versionName: projects/219018181544/secrets/YOUTUBE_MUSIC_OAUTH_JSON/versions/latest
       env: YOUTUBE_MUSIC_OAUTH_JSON
 options:
   logging: CLOUD_LOGGING_ONLY
