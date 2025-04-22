@@ -14,7 +14,7 @@ from yt2spotify.services.youtube_ytm import YoutubeYTMService
 
 application = Flask(__name__)
 
-required_vars = ['SPOTIPY_CLIENT_ID', 'SPOTIPY_CLIENT_SECRET', 'YOUTUBE_API_KEY']
+required_vars = ['SPOTIPY_CLIENT_ID', 'SPOTIPY_CLIENT_SECRET', 'YOUTUBE_API_KEY', 'YOUTUBE_MUSIC_CLIENT_ID', 'YOUTUBE_MUSIC_CLIENT_SECRET', 'YOUTUBE_MUSIC_OAUTH_JSON']
 for var in required_vars:
     if var not in os.environ:
         raise Exception(f"'{var}' env var is required")

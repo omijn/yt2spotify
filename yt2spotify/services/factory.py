@@ -1,8 +1,8 @@
 import os
-
+import json
 import spotipy
 from spotipy import SpotifyClientCredentials
-
+from ytmusicapi import YTMusic, OAuthCredentials
 from yt2spotify.services.abstract_service import MusicService
 from yt2spotify.services.service_names import ServiceNameEnum
 from yt2spotify.services.spotify import SpotifyService
@@ -23,7 +23,12 @@ class MusicServiceFactory:
             spotify_client = spotipy.Spotify(auth_manager=auth_manager)
             return SpotifyService(spotify_client)
         elif name == ServiceNameEnum.YOUTUBE_MUSIC:
-            return YoutubeMusicService()
+            ytm_client_id = os.environ.get("YOUTUBE_MUSIC_CLIENT_ID")
+            ytm_client_secret = os.environ.get("YOUTUBE_MUSIC_CLIENT_SECRET")
+            ytm_oauth_json = os.environ.get("YOUTUBE_MUSIC_OAUTH_JSON")
+            ytm_oauth = json.loads(ytm_oauth_json)
+            ytm_client = YTMusic(ytm_oauth, oauth_credentials=OAuthCredentials(client_id=ytm_client_id, client_secret=ytm_client_secret))
+            return YoutubeMusicService(ytm_client)
         elif name == ServiceNameEnum.YOUTUBE_STANDARD:
             api_key = os.environ.get("YOUTUBE_API_KEY")
             yt_client = googleapiclient.discovery.build("youtube", "v3", developerKey=api_key)
