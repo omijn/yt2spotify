@@ -19,7 +19,7 @@ class YoutubeService(MusicService):
     def __init__(self, yt_client = None):
         if yt_client is None:
             api_key = os.environ.get("YOUTUBE_API_KEY")
-            self.yt_client = googleapiclient.discovery.build("youtube", "v3", developerKey=api_key)
+            self.yt_client = googleapiclient.discovery.build("youtube", "v3", developerKey=api_key, cache_discovery=False)
         else:
             self.yt_client = yt_client
 

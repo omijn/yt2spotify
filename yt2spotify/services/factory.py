@@ -31,11 +31,11 @@ class MusicServiceFactory:
             return YoutubeMusicService(ytm_client)
         elif name == ServiceNameEnum.YOUTUBE_STANDARD:
             api_key = os.environ.get("YOUTUBE_API_KEY")
-            yt_client = googleapiclient.discovery.build("youtube", "v3", developerKey=api_key)
+            yt_client = googleapiclient.discovery.build("youtube", "v3", developerKey=api_key, cache_discovery=False)
             return YoutubeService(yt_client)
         elif name == ServiceNameEnum.YOUTUBE_YTM:
             ytm_service = YoutubeMusicService()
             api_key = os.environ.get("YOUTUBE_API_KEY")
-            yt_client = googleapiclient.discovery.build("youtube", "v3", developerKey=api_key)
+            yt_client = googleapiclient.discovery.build("youtube", "v3", developerKey=api_key, cache_discovery=False)
             yt_service = YoutubeService(yt_client)
             return YoutubeYTMService(ytm_service, yt_service)
