@@ -7,3 +7,5 @@ __pycache__
 deploy.sh
 .env
 oauth.json
+browser.json
+.firebaserc
