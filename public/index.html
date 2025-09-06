@@ -49,12 +49,71 @@
             font-style: normal;
         }
 
+        /* Status Indicator Styles */
+        .status-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .status-dot:hover {
+            transform: scale(1.2);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .status-green {
+            background-color: #28a745;
+            box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+        }
+
+        .status-red {
+            background-color: #dc3545;
+            box-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+        }
+
+        .status-yellow {
+            background-color: #ffc107;
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+        }
+
+        .status-blue {
+            background-color: #007bff;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        }
+
+        .status-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
     </style>
 </head>
 
 <body class="d-flex h-100 text-center text-white bg-dark">
 
 <div class="cover-container p-3 mx-auto h-100 w-100 flex-column d-flex">
+    <!-- Status Indicator -->
+    <div id="status-indicator" class="status-indicator" data-bs-toggle="tooltip" data-bs-placement="left" title="Recent issues with Spotify and Youtube Music have been mostly fixed">
+        <div class="status-dot status-green"></div>
+        <span class="status-text">Status</span>
+    </div>
+    
     <main class="px-3">
         <h2 class="primaryfont">music link converter</h2>
         <h6>Convert links across YouTube Music, YouTube and Spotify</h6>
@@ -237,6 +296,11 @@
             $("#error").text(xhr.responseText).removeClass("d-none")
         })
     })
+
+    // Initialize tooltip on page load
+    $(document).ready(function() {
+        new bootstrap.Tooltip(document.getElementById('status-indicator'));
+    });
 
 
 </script>
