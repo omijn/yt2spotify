@@ -51,10 +51,6 @@
 
         /* Status Indicator Styles */
         .status-indicator {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -94,12 +90,13 @@
             box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
         }
 
-        .status-text {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 12px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .status-indicator .small {
+            text-decoration: none;
+            cursor: default;
+        }
+
+        .status-indicator .small:hover {
+            text-decoration: none;
         }
 
     </style>
@@ -108,12 +105,6 @@
 <body class="d-flex h-100 text-center text-white bg-dark">
 
 <div class="cover-container p-3 mx-auto h-100 w-100 flex-column d-flex">
-    <!-- Status Indicator -->
-    <div id="status-indicator" class="status-indicator" data-bs-toggle="tooltip" data-bs-placement="left" title="Recent issues with Spotify and Youtube Music have been mostly fixed">
-        <div class="status-dot status-green"></div>
-        <span class="status-text">Status</span>
-    </div>
-    
     <main class="px-3">
         <h2 class="primaryfont">music link converter</h2>
         <h6>Convert links across YouTube Music, YouTube and Spotify</h6>
@@ -163,7 +154,14 @@
     </main>
 
     <footer class="mt-auto text-white-50">
-        <p><a class="small text-white" href="https://github.com/omijn/yt2spotify">GitHub Repo</a></p>
+        <div class="d-flex justify-content-center align-items-center gap-3">                
+            <!-- Status Indicator -->            
+            <div id="status-indicator" class="status-indicator" data-bs-toggle="tooltip" data-bs-placement="top" title="Recent issues with Spotify and Youtube Music have been mostly fixed">                
+                <p class="mb-0"><a class="small text-white">Status</a></p>
+                <div class="status-dot status-green"></div>
+            </div>
+            <p class="mb-0"><a class="small text-white" href="https://github.com/omijn/yt2spotify">GitHub Repo</a></p>
+        </div>
     </footer>
 </div>
 
