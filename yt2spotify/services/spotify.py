@@ -65,7 +65,7 @@ class SpotifyService(MusicService):
                     description2=item['release_date'][:4],
                     description3=", ".join([artist['name'] for artist in item['artists']]),
                     description4="Album",
-                    art_url=item['images'][0]['url'],
+                    art_url=item['images'][0]['url'] if len(item['images']) > 0 else "",
                 )
 
                 response.append(resp_item)
@@ -97,7 +97,7 @@ class SpotifyService(MusicService):
                     description2=f"{item['album']['name']} ({item['album']['release_date'][:4]})",
                     description3=", ".join([artist['name'] for artist in item['artists']]),
                     description4="Track",
-                    art_url=item['album']['images'][0]['url'],
+                    art_url=item['album']['images'][0]['url'] if len(item['album']['images']) > 0 else "",
                 )
 
                 response.append(resp_item)
