@@ -31,7 +31,7 @@ def convert():
             break
 
     if from_service is None:
-        return Response(response="URL does not match any known streaming services or cannot be converted. Only songs, albums and artists are supported.", status=400)
+        return Response(response="URL is invalid or cannot be converted. Only songs, albums and artists are supported.", status=400)
 
     to_service = request.args.get('to_service')
     allowed_to_services = [YoutubeMusicService, SpotifyService, YoutubeYTMService]
