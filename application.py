@@ -31,7 +31,7 @@ def convert():
             break
 
     if from_service is None:
-        return Response(response="URL is incomplete or doesn't match any known streaming services", status=400)
+        return Response(response="URL does not match any known streaming services or cannot be converted. Only songs, albums and artists are supported.", status=400)
 
     to_service = request.args.get('to_service')
     allowed_to_services = [YoutubeMusicService, SpotifyService, YoutubeYTMService]
@@ -51,7 +51,7 @@ def convert():
 
     try:
         result = converter.convert(url)
-        return Response(response=result.json(), status=200, mimetype='application/json')
+        return Response(response=result.model_dump_json(), status=200, mimetype='application/json')
     except NotFoundError as e:
         logging.exception(f"'not found' error for URL '{url}'")
         return Response(response=str(e), status=404)
