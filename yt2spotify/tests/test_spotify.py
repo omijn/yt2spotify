@@ -6,6 +6,7 @@ from yt2spotify.services.factory import MusicServiceFactory
 from yt2spotify.services.service_names import ServiceNameEnum
 
 
+@pytest.mark.skip(reason="Spotify API requires premium; skip until fixed")
 @pytest.mark.parametrize("test_url,expected_search_hint",
     [
         ("https://open.spotify.com/track/6jBCehpNMkwFVF3dz4nLIW?si=y1dqtIB0SumdJGBqKSASQg&context=spotify%3Asearch%3Aits%2Btricky", "song"),
