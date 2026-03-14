@@ -7,6 +7,7 @@ from yt2spotify.services.factory import MusicServiceFactory
 from yt2spotify.services.service_names import ServiceNameEnum
 
 
+@pytest.mark.skip(reason="Spotify API requires premium; skip until fixed")
 @pytest.mark.parametrize("test_url",
     [
         "https://music.youtube.com/watch?v=dGeEuyG_DIc&feature=share", # song
@@ -24,6 +25,7 @@ def test_convert_ytm_to_spotify(test_url):
     results = converter.convert(test_url)
     assert len(results.results) > 0
 
+@pytest.mark.skip(reason="Spotify API requires premium; skip until fixed")
 @pytest.mark.parametrize("test_url",
     [
         "https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT", # song
@@ -42,6 +44,7 @@ def test_convert_spotify_to_ytm(test_url):
     assert len(results.results) > 0
 
 
+@pytest.mark.skip(reason="Spotify API requires premium; skip until fixed")
 @pytest.mark.parametrize("test_url",
     [
         "https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT", # song

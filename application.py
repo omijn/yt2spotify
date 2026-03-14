@@ -38,6 +38,9 @@ def convert():
     if to_service not in [cls.name for cls in allowed_to_services]:
         return Response(response=f"Invalid target service.", status=400)
 
+    if from_service == SpotifyService.name or to_service == SpotifyService.name:
+        return Response(response="Spotify now requires developers to have a premium account for API access. Conversion to and from Spotify is temporarily disabled.", status=400)
+
     try:
         # TODO: return nicer error if to_service is None
         req = models.ConvertRequest(url=url, from_service=from_service, to_service=to_service)
